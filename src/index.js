@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const http = require('node:http');
 
 const routes = require('./routes');
@@ -10,6 +12,6 @@ const server = http.createServer((req, res) => {
   routes(req, res);
 });
 
-server.listen(3000, () => {
-  console.log('server is running on the port 3000');
+server.listen(process.env.NODE_PORT, () => {
+  console.log(`server is running on the ${process.env.NODE_PORT}...`);
 });
