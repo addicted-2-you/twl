@@ -32,7 +32,7 @@ const generateTokens = async (userId, username) => {
 };
 
 const updateRefreshToken = async (userId, refreshToken) => {
-  const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+  const hashedRefreshToken = await bcrypt.hash(refreshToken, +process.env.SALT);
   await db.query('UPDATE users SET refresh_token = $1 WHERE id = $2', [
     hashedRefreshToken,
     userId,
@@ -56,7 +56,7 @@ exports.signup = async (req, res) => {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, +process.env.SALT);
 
     // Create user
     const result = await db.query(
@@ -116,7 +116,10 @@ exports.signout = async (req, res) => {
     const data = await parseBody(req);
     const { refreshToken } = data;
 
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    const hashedRefreshToken = await bcrypt.hash(
+      refreshToken,
+      +process.env.SALT,
+    );
     await db.query(
       'UPDATE users SET refresh_token = NULL WHERE refresh_token = $1',
       [hashedRefreshToken],
