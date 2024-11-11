@@ -13,4 +13,4 @@ exports.parseBody = (req) =>
         reject(err);
       }
     });
-  });
+  }).catch(() => null);
